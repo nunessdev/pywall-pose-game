@@ -39,6 +39,11 @@ while cap.isOpened():
             mp_pose.POSE_CONNECTIONS
         )
 
+        # Print coordinates on screen
+        os.system('clear')
+        for i, landmark in enumerate(results.pose_landmarks.landmark):
+            print(f"Landmark #{i}: x: {round(landmark.x, 3)}, y: {round(landmark.y, 3)}, z: {round(landmark.z, 3)}")
+
     cv2.imshow('MediaPipe Pose', image)
     if cv2.waitKey(5) & 0xFF == 27:  # ESC to quit
         break
