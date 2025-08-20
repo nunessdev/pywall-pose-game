@@ -1,52 +1,32 @@
 import mediapipe as mp
 import cv2
 import os
+import pygame
 
-# This implementation was adapted from:
-# https://www.codegenes.net/blog/how-to-install-mediapipe-in-python/
+# Example file showing a basic pygame "game loop"
+import pygame
 
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose(
-    static_image_mode=False,
-    model_complexity=1,
-    enable_segmentation=False,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
-)
-mp_drawing = mp.solutions.drawing_utils
+# pygame setup
+pygame.init()
+screen = pygame.display.set_mode((1280, 720))
+clock = pygame.time.Clock()
+running = True
 
-cap = cv2.VideoCapture(0)
+while running:
+    # poll for events
+    # pygame.QUIT event means the user clicked X to close your window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-while cap.isOpened():
-    success, image = cap.read()
-    if not success:
-        print("Ignoring empty camera frame.")
-        continue
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("purple")
 
-    # Convert the BGR image to RGB
-    image.flags.writeable = False
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    results = pose.process(image)
+    # RENDER YOUR GAME HERE
 
-    # Draw the pose annotation on the image.
-    image.flags.writeable = True
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # flip() the display to put your work on screen
+    pygame.display.flip()
 
-    if results.pose_landmarks:
-        mp_drawing.draw_landmarks(
-            image,
-            results.pose_landmarks,
-            mp_pose.POSE_CONNECTIONS
-        )
+    clock.tick(60)  # limits FPS to 60
 
-        # Print coordinates on screen
-        os.system('clear')
-        for i, landmark in enumerate(results.pose_landmarks.landmark):
-            print(f"Landmark #{i}: x: {round(landmark.x, 3)}, y: {round(landmark.y, 3)}, z: {round(landmark.z, 3)}")
-
-    cv2.imshow('MediaPipe Pose', image)
-    if cv2.waitKey(5) & 0xFF == 27:  # ESC to quit
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+pygame.quit()
