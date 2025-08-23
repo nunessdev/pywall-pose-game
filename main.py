@@ -3,6 +3,7 @@ import cv2
 import os
 import pygame
 import math
+import time
 
 # mediapipe setup
 mp_pose = mp.solutions.pose
@@ -61,10 +62,13 @@ while running:
     # Read frame and display message when camera is not available
     success, image = cap.read()
     if not success:
-        text = font.render('No frame detected, please check your camera and restart the game.', True, "white", "purple")
+        text = font.render('No camera detected.', True, "white", "purple")
         textRect = text.get_rect()
         textRect.center = (X // 2, Y // 2)
         display_surface.blit(text, textRect)
+        pygame.display.update()
+        time.sleep(5)
+        break
 
     # Mediapipe stuff goes here
     # Convert the BGR image to RGB
